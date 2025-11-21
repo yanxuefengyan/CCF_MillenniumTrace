@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>千年影迹 - 文博AI互动产品</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .loading-status {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+
+        .app-container {
+            display: none;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(240, 147, 251, 0.4);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .feature-description {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            border-radius: 2px;
+            animation: progress 2s ease-in-out infinite;
+        }
+
+        @keyframes progress {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .fab-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .fab-button:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .nav-buttons {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载页面 -->
+    <div class="loading-container" id="loadingContainer">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">千年影迹正在启动...</div>
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <div class="loading-status" id="loadingStatus">正在加载核心模块...</div>
+    </div>
+
+    <!-- 主应用界面 -->
+    <div class="app-container" id="appContainer">
+        <!-- 导航栏 -->
+        <header class="header">
+            <div class="nav-container">
+                <div class="logo">🏛️ 千年影迹</div>
+                <nav class="nav-buttons">
+                    <a href="#home" class="nav-btn">首页</a>
+                    <a href="#camera" class="nav-btn">拍照识别</a>
+                    <a href="#gallery" class="nav-btn">我的藏品</a>
+                    <a href="#profile" class="nav-btn">个人中心</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <section class="hero-section">
+                <h1 class="hero-title">用AI让藏品说话</h1>
+                <p class="hero-subtitle">探索文物背后的故事，体验4D时空穿越之旅</p>
+                <button class="cta-button" onclick="startExperience()">开始探索</button>
+            </section>
+
+            <section class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">📸</div>
+                    <h3 class="feature-title">AI智能识别</h3>
+                    <p class="feature-description">拍照即可识别文物信息，毫秒级精准分析，多维度深度解读</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌟</div>
+                    <h3 class="feature-title">4D时空重现</h3>
+                    <p class="feature-description">沉浸式历史场景体验，AR/VR技术加持，穿越时空对话历史</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💎</div>
+                    <h3 class="feature-title">影迹NFT</h3>
+                    <p class="feature-description">区块链数字藏品，公益捐赠结合，永久保存文化记忆</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">跨端同步</h3>
+                    <p class="feature-description">多设备无缝同步，离线缓存支持，随时随地访问</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">精美设计</h3>
+                    <p class="feature-description">现代化UI设计，流畅动画体验，多端完美适配</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 class="feature-title">安全可靠</h3>
+                    <p class="feature-description">数据加密存储，隐私保护，安全认证体系</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 移动端浮动按钮 -->
+    <div class="mobile-menu">
+        <button class="fab-button" onclick="startCamera()">📸</button>
+    </div>
+
+    <script>
+        // 模拟加载过程
+        const loadingSteps = [
+            "正在加载核心模块...",
+            "正在初始化AI引擎...",
+            "正在连接时空数据库...",
+            "正在启动WebGL渲染器...",
+            "正在配置区块链网络...",
+            "正在完成最后准备..."
+        ];
+
+        let currentStep = 0;
+        const loadingStatus = document.getElementById('loadingStatus');
+        const loadingContainer = document.getElementById('loadingContainer');
+        const appContainer = document.getElementById('appContainer');
+
+        function updateLoadingStatus() {
+            if (currentStep < loadingSteps.length) {
+                loadingStatus.textContent = loadingSteps[currentStep];
+                currentStep++;
+                setTimeout(updateLoadingStatus, 800);
+            } else {
+                // 加载完成，显示主应用
+                setTimeout(() => {
+                    loadingContainer.style.display = 'none';
+                    appContainer.style.display = 'block';
+                    document.body.style.background = 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)';
+                }, 1000);
+            }
+        }
+
+        // 开始加载动画
+        setTimeout(updateLoadingStatus, 500);
+
+        // 开始体验功能
+        function startExperience() {
+            alert('功能演示：这里将启动相机识别功能');
+            console.log('启动AI识别功能...');
+        }
+
+        // 相机功能
+        function startCamera() {
+            alert('功能演示：相机功能将在完整版本中可用');
+            console.log('启动相机功能...');
+        }
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // 添加页面加载完成的额外处理
+        window.addEventListener('load', () => {
+            console.log('千年影迹 Web应用加载完成');
+            console.log('当前环境：简化演示版本');
+            console.log('完整功能需要等待npm依赖安装完成');
+        });
+    </script>
+</body>
+</html>

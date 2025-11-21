@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试页面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e293b 0%, #7c3aed 50%, #1e293b 100%);
+            color: white;
+            font-family: sans-serif;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ 测试成功！</h1>
+        <p>如果您看到这个页面，说明Web服务器工作正常。</p>
+        <p style="margin-top: 20px;">问题可能出在React应用的配置或依赖上。</p>
+    </div>
+    
+    <script>
+        console.log('测试页面加载成功！');
+        console.log('当前URL:', window.location.href);
+        console.log('浏览器信息:', navigator.userAgent);
+    </script>
+</body>
+</html>

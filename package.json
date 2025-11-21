@@ -1,0 +1,33 @@
+{
+  "name": "millennium-trace",
+  "version": "1.0.0",
+  "description": "MillenniumTrace - 用AI让藏品说话，30秒穿越千年",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run web:dev\" \"npm run app:dev\"",
+    "web:dev": "cd web && npm run dev",
+    "web:build": "cd web && npm run build",
+    "app:dev": "cd app && flutter run",
+    "app:build": "cd app && flutter build apk",
+    "test": "npm run web:test && npm run app:test",
+    "web:test": "cd web && npm test",
+    "app:test": "cd app && flutter test",
+    "lint": "npm run web:lint && npm run app:lint",
+    "web:lint": "cd web && npm run lint",
+    "app:lint": "cd app && flutter analyze",
+    "clean": "rm -rf node_modules web/node_modules app/build"
+  },
+  "keywords": [
+    "museum",
+    "ai",
+    "3d",
+    "nft",
+    "cultural-heritage",
+    "cross-platform"
+  ],
+  "author": "MillenniumTrace Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
